@@ -17,6 +17,7 @@ So I created this script.
     - openssh
 
 The two systems must know keys of each others.
+And the linux system should know the key of system user (because vscode is run as system user, see known issues sections)
 
 ## Environments variable
 
@@ -38,3 +39,7 @@ $ code /home/user/Documents
 ```
 
 Or without any argument (which is the same as `code .`)
+
+## Known Issues
+
+I had to use -s (run as system) on the psexec otherwise new windows (as open folder) is black; that's why you have to generate key via system.
