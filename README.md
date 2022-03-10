@@ -27,6 +27,14 @@ And the linux system should know the key of system user (because vscode is run a
  - HOST_IP: the ip of the host (in my case it's my local ip)
  - HOST_VSCODE_PATH: the path where Code.exe is installed
 
+## The script should be in your path (in the guest machine)
+
+For instance
+
+```bash
+$ cp code /usr/local/bin
+```
+
 ## How to use:
 
 ```bash
@@ -43,3 +51,4 @@ Or without any argument (which is the same as `code .`)
 ## Known Issues
 
 I had to use -s (run as system) on the psexec otherwise new windows (as open folder) is black; that's why you have to generate key via system.
+
