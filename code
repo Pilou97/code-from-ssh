@@ -1,38 +1,31 @@
 #!/bin/bash
 
 # Check of the environments variable
-if [ -z "$GUEST_ADDR" ]
+
+guest_addr=`curl ifconfig.io 2>/dev/null` # should be replace by an environment variable for better performance
+guest_user=`whoami`
+ssh_port=`grep -e "Port\s" /etc/ssh/sshd_config | cut -d " " -f2`
+
+if [ -z "$LC_VSCODE" ]
 then
-    echo GUEST_ADDR is not defined
+    echo LC_VSCODE is not defined
+    echo It should be the path to the executable of vscode
     exit 1
 fi
 
-if [ -z "$GUEST_USER" ]
+if [ -z "$LC_OS" ]
 then
-    echo GUEST_USER is not defined
+    echo Please provide a LC_OS variable
+    echo Allowed values: "windows";"macos"
     exit 1
 fi
 
-if [ -z "$HOST_USER" ]
+if [ -z "$LC_USER" ]
 then
-    echo HOST_USER is not defined
+    echo Please provide a LC_USER variable
+    echo It should be the username where your vscode is installed
     exit 1
 fi
-
-if [ -z "$HOST_IP" ]
-then
-    echo HOST_IP is not defined
-    exit 1
-fi
-
-if [ -z "$HOST_VSCODE_PATH" ]
-then
-    echo HOST_VSCODE_PATH is not defined
-    exit 1
-fi
-
-# Search for the host session
-host_session_id=`ssh $HOST_USER@$HOST_IP "quser" | grep $HOST_USER | awk '{ print $3}'` # sometime I saw that my session id is 1, other time it can be 2.
 
 if [ -z "$1" ]
 then
@@ -41,4 +34,18 @@ else
     directory=`realpath $1` # I am always using 'code .' so i have to translate '.' to an absolute path
 fi
 
-ssh $HOST_USER@$HOST_IP "psexec -s -i $host_session_id -d \"$HOST_VSCODE_PATH\" --folder-uri=vscode-remote://ssh-remote+$GUEST_USER@$GUEST_ADDR/$directory" 1>/dev/null 2>/dev/null
+if [ $LC_OS = "windows" ]
+then
+    # The following two line have to be merged into a single ssh command
+
+    # Search for the host session
+    host_session_id=`ssh -p 8822 $LC_USER@localhost "quser" | grep $LC_USER | awk '{ print $3}'` # sometime I saw that my session id is 1, other time it can be 16.
+
+    # Start vscode
+    ssh -p 8822 $LC_USER@localhost "psexec -s -i $host_session_id -d \"$LC_VSCODE\" --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
+elif [ $LC_OS = "macos" ]
+then
+    ssh -p 8822 $LC_USER@localhost "code --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
+else
+    echo "your operating system \"$LC_OS\" is not supported"
+fi
