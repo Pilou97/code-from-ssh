@@ -27,6 +27,13 @@ then
     exit 1
 fi
 
+if [ -z "$LC_REVERSE_PORT" ]
+then
+    echo Please provide a LC_REVERSE_PORT
+    echo It should be a port available on your machine
+    exit 1
+fi
+
 if [ -z "$1" ]
 then
     directory=`pwd` # If no arguments are provided the opened folder is the current one
@@ -39,16 +46,13 @@ then
     # The following two line have to be merged into a single ssh command
 
     # Search for the host session
-    host_session_id=`ssh -p 8822 $LC_USER@localhost "quser" | grep $LC_USER | awk '{ print $3}'` # sometime I saw that my session id is 1, other time it can be 16.
+    host_session_id=`ssh -p $LC_REVERSE_PORT $LC_USER@localhost "quser" | grep $LC_USER | awk '{ print $3}'` # sometime I saw that my session id is 1, other time it can be 16.
 
     # Start vscode
-    ssh -p 8822 $LC_USER@localhost "psexec -s -i $host_session_id -d \"$LC_VSCODE\" --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
+    ssh -p $LC_REVERSE_PORT $LC_USER@localhost "psexec -s -i $host_session_id -d \"$LC_VSCODE\" --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
 elif [ $LC_OS = "macos" ]
 then
-    echo coucou
-    ssh -p 8822 $LC_USER@localhost "$LC_VSCODE --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
-
-    # ssh -p 8822 $LC_USER@localhost "code --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
+    ssh -p $LC_REVERSE_PORT $LC_USER@localhost "$LC_VSCODE --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
 else
     echo "your operating system \"$LC_OS\" is not supported"
 fi

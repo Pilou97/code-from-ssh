@@ -51,12 +51,12 @@ If you use to connect to your vps via ssh you can provide environment variable v
 
 windows:
 ```bash
-powershell $env:LC_OS=\"windows\";$env:LC_USER=\"your_windows_username\";$env:LC_VSCODE=\"C:\Program Files\Microsoft VS Code\Code.exe\";ssh -R 8822:localhost:22 -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE pilou@debian
+powershell $env:LC_REVERSE_PORT=8822;$env:LC_OS=\"windows\";$env:LC_USER=\"windows_username\";$env:LC_VSCODE=\"C:\Program Files\Microsoft VS Code\Code.exe\";ssh -R \"$($env:LC_REVERSE_PORT):localhost:22\" -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE -o SendEnv=LC_REVERSE_PORT -p 2222 vps@vps.com
 ```
 
 macos:
 ```bash
-/bin/zsh -c "export LC_VSCODE='/opt/homebrew/bin/code'; export LC_OS='macos'; export LC_USER='your mac username'; ssh -R 8822:localhost:22 -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE vps_username@your_vps_address.com"
+/bin/zsh -c "export LC_REVERSE_PORT=8823; export LC_VSCODE='/opt/homebrew/bin/code'; export LC_OS='macos'; export LC_USER='your mac username'; ssh -R $LC_REVERSE_PORT:localhost:22 -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE -o SendEnv=LC_REVERSE_PORT vps@vps.com"
 ```
 
 I use this command when starting my terminal, so that I am directly in my linux instance
