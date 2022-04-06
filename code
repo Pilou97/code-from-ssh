@@ -45,7 +45,10 @@ then
     ssh -p 8822 $LC_USER@localhost "psexec -s -i $host_session_id -d \"$LC_VSCODE\" --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
 elif [ $LC_OS = "macos" ]
 then
-    ssh -p 8822 $LC_USER@localhost "code --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
+    echo coucou
+    ssh -p 8822 $LC_USER@localhost "$LC_VSCODE --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
+
+    # ssh -p 8822 $LC_USER@localhost "code --folder-uri=vscode-remote://ssh-remote+$guest_user@$guest_addr:$ssh_port/$directory" 1>/dev/null 2>/dev/null
 else
     echo "your operating system \"$LC_OS\" is not supported"
 fi
