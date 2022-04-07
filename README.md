@@ -3,18 +3,16 @@
 Start VSCode on Host machine from ssh session.
 
 I tried WSL and I loved having a linux on my windows. I liked the feature of vscode which allows you to start vscode on windows from wsl. Unfortunately, I need a real distro for my work. 
-I am using a virtual machine but vscode doesn't give you the ability to start vscode from the computer where you are accessing the virtual machine. It can be from windows or from macos or from a linux distro
+I am using a virtual machine but vscode doesn't give you the ability to start vscode from the computer where you are accessing the virtual machine. It can be from windows or from macos or from a linux distro.
 
 So I created this script.
-
-/bin/zsh -c "export LC_VSCODE='/opt/homebrew/bin/code'; export LC_OS='macos'; export LC_USER='pilou'; ssh -p 2222 -R 8822:localhost:22 -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE pilou@www.duboispl.com "
 
 ## VPS requirement:
 
 Just install the file `code` in your path
 Your vps must be a linux distro (works fine on debian)
 
-## Requirement for uour personal computer
+## Requirement for your personal computer
 
 ### Windows
     - openssh server
@@ -36,6 +34,7 @@ You should provide some environment variable to your linux distro:
  - LC_VSCODE : the path to the vscode execution
  - LC_OS : the os of your computer, possible values are: 'macos', 'windows'
  - LC_USER: the user of your computer
+ - LC_REMOTE_HOST: the ssh host of your vps  ("user@example.com", "dev", "user@192.168.1.2:22")
 
 ## The script should be in your path (on your VPS)
 
@@ -51,16 +50,15 @@ If you use to connect to your vps via ssh you can provide environment variable v
 
 windows:
 ```bash
-powershell $env:LC_REVERSE_PORT=8822;$env:LC_OS=\"windows\";$env:LC_USER=\"windows_username\";$env:LC_VSCODE=\"C:\Program Files\Microsoft VS Code\Code.exe\";ssh -R \"$($env:LC_REVERSE_PORT):localhost:22\" -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE -o SendEnv=LC_REVERSE_PORT -p 2222 vps@vps.com
+powershell $env:LC_REMOTE_HOST=\"vps@example.com\" $env:LC_REVERSE_PORT=8822;$env:LC_OS=\"windows\";$env:LC_USER=\"windows_username\";$env:LC_VSCODE=\"C:\Program Files\Microsoft VS Code\Code.exe\";ssh -R \"$($env:LC_REVERSE_PORT):localhost:22\" -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE -o SendEnv=LC_REVERSE_PORT -p 2222 vps@example.com
 ```
 
 macos:
 ```bash
-/bin/zsh -c "export LC_REVERSE_PORT=8823; export LC_VSCODE='/opt/homebrew/bin/code'; export LC_OS='macos'; export LC_USER='your mac username'; ssh -R $LC_REVERSE_PORT:localhost:22 -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE -o SendEnv=LC_REVERSE_PORT vps@vps.com"
+/bin/zsh -c "export LC_REMOTE_HOST='vps@vps.com' export LC_REVERSE_PORT=8823; export LC_VSCODE='/opt/homebrew/bin/code'; export LC_OS='macos'; export LC_USER='your mac username'; ssh -R $LC_REVERSE_PORT:localhost:22 -o SendEnv=LC_OS -o SendEnv=LC_USER -o SendEnv=LC_VSCODE -o SendEnv=LC_REVERSE_PORT vps@example.com"
 ```
 
 I use this command when starting my terminal, so that I am directly in my linux instance
-
 
 ## How to use:
 
