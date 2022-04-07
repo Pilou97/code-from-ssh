@@ -31,7 +31,7 @@ fi
 
 if [ -z "$LC_REMOTE_HOST" ]
 then
-    echo Please provide a LC_VSCODE_HOST
+    echo Please provide a LC_REMOTE_HOST
     echo It should be the host of your remote machine
     exit 1
 fi
