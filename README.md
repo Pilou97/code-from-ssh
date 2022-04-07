@@ -28,7 +28,7 @@ The two systems must know keys of each others.
 
 For windows only, the linux system should know the key of system user (because vscode is run as system user, see known issues sections)
 
-## Environments variable
+## Environment variables
 
 You should provide some environment variable to your linux distro:
  - LC_VSCODE : the path to the vscode execution
