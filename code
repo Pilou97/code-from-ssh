@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Check if the session is an ssh session
+# If not vscode is starting normally
+if [ -z "$SSH_CONNECTION" ]
+then
+    code $@
+    exit 0
+fi
+
 # Check of the environments variable
 if [ -z "$LC_VSCODE" ]
 then
