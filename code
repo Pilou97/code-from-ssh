@@ -1,10 +1,12 @@
 #!/bin/bash
 
+VSCODE_PATH="/sbin/code"
+
 # Check if the session is an ssh session
 # If not vscode is starting normally
 if [ -z "$SSH_CONNECTION" ]
 then
-    /usr/local/bin/code $@
+    $VSCODE_PATH $@
     exit $?
 fi
 
@@ -53,7 +55,7 @@ fi
 
 if [ $LC_OS = "windows" ]
 then
-    # The following two line have to be merged into a single ssh command
+    # The following two line have to be merge into a single ssh command
 
     # Search for the host session
     host_session_id=`ssh -p $LC_REVERSE_PORT $LC_USER@localhost "quser" | grep $LC_USER | awk '{ print $3}'` # sometime I saw that my session id is 1, other time it can be 16.
@@ -63,5 +65,5 @@ elif [ $LC_OS = "macos" ]
 then
     ssh -p $LC_REVERSE_PORT $LC_USER@localhost "$LC_VSCODE --folder-uri=vscode-remote://ssh-remote+$LC_REMOTE_HOST/$directory"
 else
-    echo "your operating system \"$LC_OS\" is not supported"
+    echo "your operating system \"$LC_OS\" is not yet supported"
 fi

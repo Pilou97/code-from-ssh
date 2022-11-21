@@ -28,6 +28,15 @@ The two systems must know keys of each others.
 
 For windows only, the linux system should know the key of system user (because vscode is run as system user, see known issues sections)
 
+## Requirement on your server:
+
+You need to have an ssh server.
+Add the following in your ssh server configuration:
+```
+AcceptEnv LC_
+```
+In linux it's located under /etc/ssh/sshd_config
+
 ## Environment variables
 
 You should provide some environment variable to your linux distro:
